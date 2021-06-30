@@ -48,16 +48,23 @@ import { useWeatherAPI } from "../hooks/useWeatherAPI";
 
 export function Forecast() {
   const period = useSelector(x => x.period);
-  console.log('oto ' + period);
   const place = useSelector(x => x.place);
+  useEffect(() => {
+    console.log("hejka");
+    setState({
+      loading: true,
+      forecast: {}
+    });
+  }, [period, place]);
   const [state, setState] = useState({
     loading: true,
     forecast: {}
   });
   const key = useWeatherAPI();
-  const fetchData = (position) => {
-    fetch(`http://api.weatherapi.com/v1/current.json?key=${key}&lang=pl` +
-          `&q=${position.coords.latitude},${position.coords.longitude}`)
+  const fetchData = (pos) => {
+    fetch(`http://api.weatherapi.com/v1/${period === 'REALTIME' ? 'current.json?' :
+          'forecast.json?days=3&'}key=${key}&lang=pl&q=${pos.coords.latitude},${
+          pos.coords.longitude}`)
       .then(response => {
         if (!response.ok)
           throw Error("No connection");
@@ -70,11 +77,6 @@ export function Forecast() {
         setState({loading: false, forecast: {}});
       });
   }
-
-  useEffect(() => {setState({
-    loading: true,
-    forecast: {}
-  })}, [place]);
 
   if (state.loading) {
     if (Object.keys(place).length === 0)
@@ -96,14 +98,62 @@ export function Forecast() {
       );
     }
     else {
-      return (
-        <div>
-          <h1>{state.forecast.location.name}, {state.forecast.location.country}</h1>
-          <h2>{state.forecast.current.temp_c}°C</h2>
-          <img src={`http:${state.forecast.current.condition.icon}`} alt="current weather" />
-          <p>{state.forecast.current.condition.text}</p>
-        </div>
-      );
+      console.log(state.forecast);
+      switch (period) {
+        case 'DAILY':
+          return (
+            <div>
+              <h1>{state.forecast.location.name}, {state.forecast.location.country}</h1>
+              <div>
+                <h2>Dzisiaj</h2>
+                <h3>
+                  {state.forecast.forecast.forecastday[0].day.maxtemp_c}°C
+                  <span>
+                    {state.forecast.forecast.forecastday[0].day.mintemp_c}°C
+                  </span>
+                </h3>
+                <img src={`http:${state.forecast.forecast.forecastday[0].day.condition.icon}`} alt="" />
+                <p>{state.forecast.forecast.forecastday[0].day.condition.text}</p>
+              </div>
+              <div>
+                <h2>Jutro</h2>
+                <h3>
+                  {state.forecast.forecast.forecastday[1].day.maxtemp_c}°C
+                  <span>
+                    {state.forecast.forecast.forecastday[1].day.mintemp_c}°C
+                  </span>
+                </h3>
+                <img src={`http:${state.forecast.forecast.forecastday[1].day.condition.icon}`} alt="" />
+                <p>{state.forecast.forecast.forecastday[1].day.condition.text}</p>
+              </div>
+              <div>
+                <h2>Pojutrze</h2>
+                <h3>
+                  {state.forecast.forecast.forecastday[2].day.maxtemp_c}°C
+                  <span>
+                    {state.forecast.forecast.forecastday[2].day.mintemp_c}°C
+                  </span>
+                </h3>
+                <img src={`http:${state.forecast.forecast.forecastday[2].day.condition.icon}`} alt="" />
+                <p>{state.forecast.forecast.forecastday[2].day.condition.text}</p>
+              </div>
+            </div>
+          );
+        case 'HOURLY':
+          return (
+            <div>O tej porze nie wiem</div>
+          );
+        case 'REALTIME':
+        default:
+          return (
+            <div>
+              <h1>{state.forecast.location.name}, {state.forecast.location.country}</h1>
+              <h2>{state.forecast.current.temp_c}°C</h2>
+              <img src={`http:${state.forecast.current.condition.icon}`} alt="current weather" />
+              <p>{state.forecast.current.condition.text}</p>
+            </div>
+          );
+      }
     }
   }
 }
