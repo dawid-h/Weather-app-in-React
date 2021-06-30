@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import Autocomplete from 'react-autocomplete';
 import { useWeatherAPI } from '../hooks/useWeatherAPI';
 
-
 export function SearchBar() {
   const [state, setState] = useState({
     value: '',
@@ -21,12 +20,10 @@ export function SearchBar() {
         return response.json();
       })
       .then(data => {
-        console.log(value);
-        console.log(data);
         setState({value, items: data, loading: false});
       })
       .catch(() => {
-        setState({value, items: [], loading: false})
+        setState({value, items: [], loading: false});
       });
   }
 
