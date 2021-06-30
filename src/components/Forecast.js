@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useWeatherAPI } from "../hooks/useWeatherAPI";
 
 /* The example of an API answer:
@@ -45,14 +45,14 @@ import { useWeatherAPI } from "../hooks/useWeatherAPI";
 }
 */
 
-export function Forecast() {
+export function Forecast(props) {
   const [state, setState] = useState({
     loading: true,
     forecast: {}
   });
   const key = useWeatherAPI();
   const fetchData = (position) => {
-    fetch(`http://api.weatherapi.com/v1/current.json?key=${key}` +
+    fetch(`http://api.weatherapi.com/v1/current.json?key=${key}&lang=pl` +
           `&q=${position.coords.latitude},${position.coords.longitude}`)
       .then(response => {
         if (!response.ok)
@@ -67,23 +67,28 @@ export function Forecast() {
       });
   }
 
+  useEffect(() => {setState({
+    loading: true,
+    forecast: {}
+  })}, [props.localization]);
+
   if (state.loading) {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(fetchData);
-      return (
-        <div></div>
-      );
-    }
-    else {
-      return (
-        <div>Geolocation is not supported.</div>
-      );
-    }
+    if (Object.keys(props.localization).length === 0)
+      navigator.geolocation ?
+        navigator.geolocation.getCurrentPosition(fetchData) :
+        setState({loading: false, forecast: {}});
+    else fetchData({coords: {
+      latitude: props.localization.lat,
+      longitude: props.localization.lon
+    }});
+    return (
+      <div>loading...</div>
+    );
   }
   else {
-    if (state.forecast === {}) {
+    if (Object.keys(state.forecast).length === 0) {
       return (
-        <div>Loading data went wrong.</div>
+        <div>Loading data went wrong. Check if geolocation is supported.</div>
       );
     }
     else {
