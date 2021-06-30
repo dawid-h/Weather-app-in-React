@@ -10,3 +10,9 @@ export const setPlace = (place) => {
       place
     }
 }
+
+export const setPeriod = (period) => {
+  return {
+    type: period
+  };
+}

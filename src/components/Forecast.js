@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useWeatherAPI } from "../hooks/useWeatherAPI";
 
 /* The example of an API answer:
@@ -45,7 +46,10 @@ import { useWeatherAPI } from "../hooks/useWeatherAPI";
 }
 */
 
-export function Forecast(props) {
+export function Forecast() {
+  const period = useSelector(x => x.period);
+  console.log('oto ' + period);
+  const place = useSelector(x => x.place);
   const [state, setState] = useState({
     loading: true,
     forecast: {}
@@ -70,16 +74,16 @@ export function Forecast(props) {
   useEffect(() => {setState({
     loading: true,
     forecast: {}
-  })}, [props.localization]);
+  })}, [place]);
 
   if (state.loading) {
-    if (Object.keys(props.localization).length === 0)
+    if (Object.keys(place).length === 0)
       navigator.geolocation ?
         navigator.geolocation.getCurrentPosition(fetchData) :
         setState({loading: false, forecast: {}});
     else fetchData({coords: {
-      latitude: props.localization.lat,
-      longitude: props.localization.lon
+      latitude: place.lat,
+      longitude: place.lon
     }});
     return (
       <div>loading...</div>
