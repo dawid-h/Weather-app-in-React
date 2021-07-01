@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addCache } from "../../actions";
 import { useWeatherAPI } from "../../hooks/useWeatherAPI";
 import { Daily } from "./components/daily";
 import { Hourly } from "./components/hourly";
 import { Realtime } from "./components/realtime";
 
 export function Forecast() {
+  const dispatch = useDispatch();
   const period = useSelector(x => x.period);
   const place = useSelector(x => x.place);
+  const forecast = useSelector(x => x.cache[period][place]);
   const [state, setState] = useState({
-    loading: true,
-    forecast: {}
+    loading: (forecast === undefined),
+    forecast: forecast
   });
   const key = useWeatherAPI();
   const fetchData = (pos) => {
+    console.log(period + " " + pos.coords.latitude + "," + pos.coords.longitude);
     fetch(`http://api.weatherapi.com/v1/${period === 'REALTIME' ? 'current.json?' :
-          'forecast.json?days=3&'}key=${key}&lang=pl&q=${pos.coords.latitude},${
-          pos.coords.longitude}`)
+          'forecast.json?days=3&'}key=${key}&q=${pos.coords.latitude},${pos.coords.longitude}`)
       .then(response => {
         if (!response.ok)
           throw Error("No connection");
@@ -24,24 +27,25 @@ export function Forecast() {
       })
       .then(data => {
         setState({loading: false, forecast: data});
+        dispatch(addCache(place, period, data));
       })
       .catch(() => {
-        setState({loading: false, forecast: {}});
+        setState({loading: false, forecast: undefined});
       });
   }
 
   useEffect(() => {
     setState({
-      loading: true,
-      forecast: {}
+      loading: (forecast === undefined),
+      forecast: forecast
     });
-  }, [place]);
+  }, [place, forecast]); // czy to potrzebne
 
   if (state.loading) {
     if (Object.keys(place).length === 0)
       navigator.geolocation ?
         navigator.geolocation.getCurrentPosition(fetchData) :
-        setState({loading: false, forecast: {}});
+        setState({loading: false, forecast: undefined});
     else fetchData({coords: {
       latitude: place.lat,
       longitude: place.lon
@@ -51,7 +55,7 @@ export function Forecast() {
     );
   }
   else {
-    if (Object.keys(state.forecast).length === 0) {
+    if (state.forecast === undefined) {
       return (
         <div>Loading data went wrong. Check if geolocation is supported.</div>
       );
@@ -60,14 +64,14 @@ export function Forecast() {
       switch (period) {
         case 'DAILY':
           if (state.forecast.forecast === undefined)
-            setState({loading: true, forecast: {}});
+            setState({loading: true, forecast: undefined});
           else return (
             <Daily {...state.forecast} />
           );
           break;
         case 'HOURLY':
           if (state.forecast.forecast === undefined)
-            setState({loading: true, forecast: {}});
+            setState({loading: true, forecast: undefined});
           else return (
             <Hourly {...state.forecast} />
           );

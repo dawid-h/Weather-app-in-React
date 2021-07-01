@@ -2,7 +2,7 @@
 export const localizationReducer = (state = {}, action) => {
   switch (action.type) {
     case 'HERE':
-      return '';
+      return {};
     case 'ELSEWHERE':
       return action.place;
     default:
