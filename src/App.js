@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchBar } from './components/SearchBar';
-import { Forecast } from './components/Forecast';
+import { Forecast } from './components/forecast/Forecast';
 import { PeriodSwitch } from './components/Switch';
 import { createStore } from 'redux';
 import { allReducers } from './reducers';
