@@ -1,20 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SearchBar } from './components/SearchBar';
 import { Forecast } from './components/forecast/Forecast';
 import { PeriodSwitch } from './components/Switch';
-import { createStore } from 'redux';
-import { allReducers } from './reducers';
-import { Provider } from 'react-redux';
 
 function App() {
-  const store = createStore(allReducers);
+  const [state, setState] = useState({});
+
+  if (Object.keys(state).length === 0) {
+    if (navigator.geolocation)
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setState({
+          latitude: pos.coords.latitude, 
+          longitude: pos.coords.longitude
+        });
+      });
+    return (
+      <div>Please provide your geolocation to use this application.</div>
+    );
+  }
 
   return (
-    <Provider store={store}>
-      <SearchBar />
+    <div>
+      <SearchBar {...state} />
       <PeriodSwitch />
       <Forecast />
-    </Provider>
+    </div>
   );
 }
 
