@@ -4,6 +4,11 @@ import { Forecast } from './components/forecast/Forecast';
 import { PeriodSwitch } from './components/Switch';
 import { useDispatch } from 'react-redux';
 import { setPlace } from './actions';
+import { ThemeProvider } from "styled-components";
+import "./style.css";
+import lightTheme from "./themes/light";
+// import darkTheme from "./themes/dark";
+import Container from "./components/styles/Container";
 
 function App() {
   const [state, setState] = useState({});
@@ -26,11 +31,13 @@ function App() {
 
   dispatch(setPlace(state));
   return (
-    <div>
-      <SearchBar {...state} />
-      <PeriodSwitch />
-      <Forecast />
-    </div>
+    <ThemeProvider theme={lightTheme}>
+      <Container>
+        <SearchBar {...state} />
+        <PeriodSwitch />
+        <Forecast />
+      </Container>
+    </ThemeProvider>
   );
 }
 
