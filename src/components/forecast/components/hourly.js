@@ -1,14 +1,17 @@
 import { WeatherOverview } from "./WeatherOverview";
 import GridContainer from "../../styles/GridContainer";
 import GridItem from "../../styles/GridItem";
+import SideInfo from "../../styles/SideInfo";
+import { WeatherGIF } from "./WeatherGIF";
 
 export function Hourly(props) {
   return (
     <div>
       <h1>{props.location.name}, {props.location.country}</h1>
-      <h4>
+      <SideInfo>
         <WeatherOverview {...props.forecast.forecastday} />
-      </h4>
+        <WeatherGIF condition={props.current.condition.text} />
+      </SideInfo>
       <GridContainer moreCols>
         {props.forecast.forecastday[0].hour.map(x =>
           <GridItem key={x.time.substr(x.time.length - 5)}>

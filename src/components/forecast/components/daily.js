@@ -1,7 +1,9 @@
 import GridContainer from "../../styles/GridContainer";
 import GridItem from "../../styles/GridItem";
+import SideInfo from "../../styles/SideInfo";
 import NightTemp from "../../styles/NightTemp";
 import { WeatherOverview } from "./WeatherOverview";
+import { WeatherGIF } from "./WeatherGIF";
 
 export function Daily(props) {
   const days = ['Today', 'Tomorrow', 'The day after tomorrow'];
@@ -9,9 +11,10 @@ export function Daily(props) {
   return (
     <div>
       <h1>{props.location.name}, {props.location.country}</h1>
-      <h4>
+      <SideInfo>
         <WeatherOverview {...props.forecast.forecastday} />
-      </h4>
+        <WeatherGIF condition={props.current.condition.text} />
+      </SideInfo>
       <GridContainer>
         {props.forecast.forecastday.map((elem, i) =>
           <GridItem>

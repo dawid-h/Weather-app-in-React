@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { Loading } from "../../Loading";
+import MediumImg from "../../styles/MediumImg";
 
 export function WeatherGIF(props) {
   const gifSwitch = useRef(null);
@@ -28,6 +29,10 @@ export function WeatherGIF(props) {
   );
   
   return (
-    <img src={gifs.results[gif].media[0].gif.url} alt="" />
+    <>
+      <hr />
+      <p>But currently the weather is like</p>
+      <MediumImg src={gifs.results[gif].media[0].gif.url} alt="" />
+    </>
   );
 }
