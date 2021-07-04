@@ -19,8 +19,9 @@ export const setPeriod = (period) => {
 
 export const addCache = (place, period, forecast) => {
   return {
+    type: 'ADD',
     place,
-    type: period,
+    period,
     forecast
   }
 }

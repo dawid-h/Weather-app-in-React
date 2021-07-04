@@ -1,22 +1,14 @@
 import React, { useRef, useState } from 'react';
 import Autocomplete from 'react-autocomplete';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setPlace } from '../actions';
 import { useWeatherAPI } from '../hooks/useWeatherAPI';
 
-export function SearchBar(props) {
+export function SearchBar(yourLocation) {
   const dispatch = useDispatch();
-  const YOUR_LOCATION = useSelector(x => x.place);
-  if (Object.keys(YOUR_LOCATION).length === 0) {
-    YOUR_LOCATION.name = 'Your location';
-    YOUR_LOCATION.id = 0;
-    YOUR_LOCATION.lat = props.latitude;
-    YOUR_LOCATION.lon = props.longitude;
-    dispatch(setPlace(YOUR_LOCATION));
-  }
   const [state, setState] = useState({
-    value: YOUR_LOCATION.name,
-    items: [YOUR_LOCATION],
+    value: yourLocation.name,
+    items: [yourLocation],
     loading: false
   });
   const key = useWeatherAPI();
@@ -24,7 +16,7 @@ export function SearchBar(props) {
 
   async function fetchDataFromAPI(value) {
     if (value === '') {
-      setState({value, items: [YOUR_LOCATION], loading: false});
+      setState({value, items: [yourLocation], loading: false});
       return;
     }
     fetch(`http://api.weatherapi.com/v1/search.json?key=${key}&q=${encodeURI(value)}`)
@@ -34,7 +26,7 @@ export function SearchBar(props) {
         return response.json();
       })
       .then(data => {
-        setState({value, items: [YOUR_LOCATION, ...data], loading: false});
+        setState({value, items: [yourLocation, ...data], loading: false});
       })
       .catch(() => {
         setState({value, items: [], loading: false});
@@ -51,6 +43,7 @@ export function SearchBar(props) {
         onSelect={(val, item) => {
           setState({...state, value: val, items: [item]});
           dispatch(setPlace(item));
+          console.log(item);
         }}
         onChange={(e) => {
           setState({value: e.target.value, items: [], loading: true});
