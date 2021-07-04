@@ -17,11 +17,10 @@ export const setPeriod = (period) => {
   };
 }
 
-export const addCache = (place, period, forecast) => {
+export const addCache = (place, forecast) => {
   return {
     type: 'ADD',
     place,
-    period,
     forecast
   }
 }

@@ -1,20 +1,10 @@
 
-export const cacheReducer = (state = {REALTIME: {}, HOURLY: {}, DAILY: {}}, action) => {
-  const newState = {...state};
+export const cacheReducer = (state = {}, action) => {
   switch (action.type) {
     case 'ADD':
-      switch (action.period) {
-        case 'REALTIME':
-          newState.REALTIME[action.place.lat + ',' + action.place.lon] = action.forecast;
-          return newState;
-        case 'HOURLY':
-        case 'DAILY':
-          newState.HOURLY[action.place.lat + ',' + action.place.lon] = action.forecast;
-          newState.DAILY[action.place.lat + ',' + action.place.lon] = action.forecast;
-          return newState;
-        default:
-          return state;
-      }
+      const newState = {...state};
+      newState[action.place.lat + ',' + action.place.lon] = action.forecast;
+      return newState;
     default:
       return state;
   }

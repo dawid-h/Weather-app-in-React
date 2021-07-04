@@ -11,7 +11,7 @@ export function Forecast() {
   const dispatch = useDispatch();
   const period = useSelector(x => x.period);
   const place = useSelector(x => x.place);
-  const forecast = useSelector(x => x.cache[period][place.lat + ',' + place.lon]);
+  const forecast = useSelector(x => x.cache[place.lat + ',' + place.lon]);
   const [state, setState] = useState({
     loading: (forecast === undefined),
     forecast: forecast
@@ -28,15 +28,15 @@ export function Forecast() {
   if (state.loading) {
     if (place.lat !== undefined && place.lon !== undefined) {
       console.log(period + ' ' + place.lat + ' ' + place.lon);
-      fetch(`http://api.weatherapi.com/v1/${period === 'REALTIME' ? 'current.json?' :
-            'forecast.json?days=3&'}key=${key}&q=${place.lat},${place.lon}`
+      fetch(`http://api.weatherapi.com/v1/forecast.json?` +
+            `key=${key}&q=${place.lat},${place.lon}&days=3`
       ).then(response => {
         if (!response.ok)
           throw Error("No connection");
         return response.json();
       }).then(data => {
         setState({loading: false, forecast: data});
-        dispatch(addCache(place, period, data));
+        dispatch(addCache(place, data));
       }).catch(() => {
         setState({loading: false, forecast: undefined});
       });
