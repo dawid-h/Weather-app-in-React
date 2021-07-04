@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { setPlace } from '../actions';
 import { useWeatherAPI } from '../hooks/useWeatherAPI';
 import Loader from "react-loader-spinner";
+import DropDownList from './styles/DropDownList';
 
 export function SearchBar(yourLocation) {
   const dispatch = useDispatch();
@@ -14,6 +15,9 @@ export function SearchBar(yourLocation) {
   });
   const key = useWeatherAPI();
   const typingTimerRef = useRef(null);
+  const isSimilar = (original, compared) => {
+    return original.toLowerCase().indexOf(compared.toLowerCase()) === 0;
+  }
 
   async function fetchDataFromAPI(value) {
     if (value === '') {
@@ -27,7 +31,11 @@ export function SearchBar(yourLocation) {
         return response.json();
       })
       .then(data => {
-        setState({value, items: [yourLocation, ...data], loading: false});
+        setState({
+          value, 
+          items: isSimilar(yourLocation.name, value) ? [yourLocation, ...data] : data, 
+          loading: false
+        });
       })
       .catch(() => {
         setState({value, items: [], loading: false});
@@ -36,7 +44,7 @@ export function SearchBar(yourLocation) {
 
   return (
     <div>
-      <h1>Choose the location</h1>
+      <p>Choose the location</p>
       <Autocomplete
         value={state.value}
         items={state.items}
@@ -57,7 +65,7 @@ export function SearchBar(yourLocation) {
           </div>
         }
         renderMenu={(items, value) => (
-          <div>{
+          <DropDownList>{
             state.loading ? (
               <Loader
                 type="Puff"
@@ -67,9 +75,9 @@ export function SearchBar(yourLocation) {
                 timeout={3000} //3 secs
               />
             ) : state.items.length === 0 ? (
-              <div>No matches for {value}</div>
+              <p>No matches for "{value}"</p>
             ) : items
-          }</div>
+          }</DropDownList>
         )}
       />
     </div>
