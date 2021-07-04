@@ -17,7 +17,7 @@ export function Daily(props) {
       </SideInfo>
       <GridContainer>
         {props.forecast.forecastday.map((elem, i) =>
-          <GridItem>
+          <GridItem key={i}>
             <h2>{days[i]}</h2>
             <h3>
               {elem.day.maxtemp_c}°C
