@@ -24,3 +24,9 @@ export const addCache = (place, forecast) => {
     forecast
   }
 }
+
+export const toggleTheme = () => {
+  return {
+    type: 'CHANGE_THEME'
+  }
+}
