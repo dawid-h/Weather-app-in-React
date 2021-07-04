@@ -17,7 +17,6 @@ export function Realtime(forecast) {
       return response.json();
     }).then(data => {
       forecast = {...forecast, ...data};
-      console.log(forecast);
       setError(false);
     }).catch(() => {
       setError(true);

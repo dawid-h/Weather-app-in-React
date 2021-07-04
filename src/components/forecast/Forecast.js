@@ -12,10 +12,7 @@ export function Forecast() {
   const period = useSelector(x => x.period);
   const place = useSelector(x => x.place);
   const forecast = useSelector(x => x.cache[place.lat + ',' + place.lon]);
-  const [state, setState] = useState({
-    loading: (forecast === undefined),
-    forecast: forecast
-  });
+  const [state, setState] = useState({});
   const key = useWeatherAPI();
 
   useEffect(() => {
@@ -23,11 +20,10 @@ export function Forecast() {
       loading: (forecast === undefined),
       forecast: forecast
     });
-  }, [place, forecast]); // czy to potrzebne
+  }, [place, forecast]);
 
   if (state.loading) {
     if (place.lat !== undefined && place.lon !== undefined) {
-      console.log(period + ' ' + place.lat + ' ' + place.lon);
       fetch(`http://api.weatherapi.com/v1/forecast.json?` +
             `key=${key}&q=${place.lat},${place.lon}&days=3`
       ).then(response => {
