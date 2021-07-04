@@ -21,8 +21,11 @@ export function Realtime(forecast) {
     });
   }
 
-  clearTimeout(refresh.current);
-  refresh.current = setTimeout(() => fetchDataFromAPI(), FIFTEEN_MINUTES);
+  if (refresh.current === null)
+    fetchDataFromAPI();
+  
+  clearInterval(refresh.current);
+  refresh.current = setInterval(() => fetchDataFromAPI(), FIFTEEN_MINUTES);
 
   function writeErrorIfOccurred() {
     return error ? 'Loading current data failed' : '';
