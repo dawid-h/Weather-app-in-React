@@ -3,7 +3,7 @@ import Autocomplete from 'react-autocomplete';
 import { useDispatch } from 'react-redux';
 import { setPlace } from '../actions';
 import { useWeatherAPI } from '../hooks/useWeatherAPI';
-import Loader from "react-loader-spinner";
+import { Loading } from './Loading';
 import DropDownList from './styles/DropDownList';
 
 export function SearchBar(yourLocation) {
@@ -67,13 +67,7 @@ export function SearchBar(yourLocation) {
         renderMenu={(items, value) => (
           <DropDownList>{
             state.loading ? (
-              <Loader
-                type="Puff"
-                color="#00BFFF"
-                height={100}
-                width={100}
-                timeout={3000} //3 secs
-              />
+              <Loading />
             ) : state.items.length === 0 ? (
               <p>No matches for "{value}"</p>
             ) : items

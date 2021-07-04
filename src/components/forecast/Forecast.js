@@ -5,7 +5,7 @@ import { useWeatherAPI } from "../../hooks/useWeatherAPI";
 import { Daily } from "./components/daily";
 import { Hourly } from "./components/hourly";
 import { Realtime } from "./components/realtime";
-import Loader from "react-loader-spinner";
+import { Loading } from "../Loading";
 
 export function Forecast() {
   const dispatch = useDispatch();
@@ -37,15 +37,7 @@ export function Forecast() {
         setState({loading: false, forecast: undefined});
       });
     }
-    return (
-      <Loader
-        type="Puff"
-        color="#00BFFF"
-        height={100}
-        width={100}
-        timeout={3000} //3 secs
-      />
-    );
+    return (<Loading />);
   }
   else {
     if (state.forecast !== undefined) {

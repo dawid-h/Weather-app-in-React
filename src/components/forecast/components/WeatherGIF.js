@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import Loader from "react-loader-spinner";
+import { Loading } from "../../Loading";
 
 export function WeatherGIF(props) {
   const gifSwitch = useRef(null);
@@ -19,15 +19,7 @@ export function WeatherGIF(props) {
     }).then(data => setGifs(data)
     ).catch(() => setGifs(undefined));
 
-    return (
-      <Loader
-        type="Puff"
-        color="#00BFFF"
-        height={100}
-        width={100}
-        timeout={3000}
-      />
-    );
+    return (<Loading />);
   }
 
   clearInterval(gifSwitch.current);
