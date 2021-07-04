@@ -1,45 +1,32 @@
+import GridContainer from "../../styles/GridContainer";
+import GridItem from "../../styles/GridItem";
+import NightTemp from "../../styles/NightTemp";
 import { WeatherOverview } from "./WeatherOverview";
 
 export function Daily(props) {
+  const days = ['Today', 'Tomorrow', 'The day after tomorrow'];
+
   return (
     <div>
       <h1>{props.location.name}, {props.location.country}</h1>
       <h4>
         <WeatherOverview {...props.forecast.forecastday} />
       </h4>
-      <span>
-        <h2>Dzisiaj</h2>
-        <h3>
-          {props.forecast.forecastday[0].day.maxtemp_c}°C
-          <span>
-            {props.forecast.forecastday[0].day.mintemp_c}°C
-          </span>
-        </h3>
-        <img src={`http:${props.forecast.forecastday[0].day.condition.icon}`} alt="" />
-        <p>{props.forecast.forecastday[0].day.condition.text}</p>
-      </span>
-      <span>
-        <h2>Jutro</h2>
-        <h3>
-          {props.forecast.forecastday[1].day.maxtemp_c}°C
-          <span>
-            {props.forecast.forecastday[1].day.mintemp_c}°C
-          </span>
-        </h3>
-        <img src={`http:${props.forecast.forecastday[1].day.condition.icon}`} alt="" />
-        <p>{props.forecast.forecastday[1].day.condition.text}</p>
-      </span>
-      <span>
-        <h2>Pojutrze</h2>
-        <h3>
-          {props.forecast.forecastday[2].day.maxtemp_c}°C
-          <span>
-            {props.forecast.forecastday[2].day.mintemp_c}°C
-          </span>
-        </h3>
-        <img src={`http:${props.forecast.forecastday[2].day.condition.icon}`} alt="" />
-        <p>{props.forecast.forecastday[2].day.condition.text}</p>
-      </span>
+      <GridContainer>
+        {props.forecast.forecastday.map((elem, i) =>
+          <GridItem>
+            <h2>{days[i]}</h2>
+            <h3>
+              {elem.day.maxtemp_c}°C
+              <NightTemp>
+                {elem.day.mintemp_c}°C
+              </NightTemp>
+            </h3>
+            <img src={`http:${elem.day.condition.icon}`} alt="" />
+            <p>{elem.day.condition.text}</p>
+          </GridItem>
+        )}
+      </GridContainer>
     </div>
   );
 }
