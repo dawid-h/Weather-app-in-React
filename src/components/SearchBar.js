@@ -3,6 +3,7 @@ import Autocomplete from 'react-autocomplete';
 import { useDispatch } from 'react-redux';
 import { setPlace } from '../actions';
 import { useWeatherAPI } from '../hooks/useWeatherAPI';
+import Loader from "react-loader-spinner";
 
 export function SearchBar(yourLocation) {
   const dispatch = useDispatch();
@@ -43,7 +44,6 @@ export function SearchBar(yourLocation) {
         onSelect={(val, item) => {
           setState({...state, value: val, items: [item]});
           dispatch(setPlace(item));
-          console.log(item);
         }}
         onChange={(e) => {
           setState({value: e.target.value, items: [], loading: true});
@@ -58,9 +58,17 @@ export function SearchBar(yourLocation) {
         }
         renderMenu={(items, value) => (
           <div>{
-            state.loading ? (<div>Loading...</div>) :
-            state.items.length === 0 ? (<div>No matches for {value}</div>) :
-            items
+            state.loading ? (
+              <Loader
+                type="Puff"
+                color="#00BFFF"
+                height={100}
+                width={100}
+                timeout={3000} //3 secs
+              />
+            ) : state.items.length === 0 ? (
+              <div>No matches for {value}</div>
+            ) : items
           }</div>
         )}
       />

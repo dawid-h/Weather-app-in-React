@@ -5,6 +5,7 @@ import { useWeatherAPI } from "../../hooks/useWeatherAPI";
 import { Daily } from "./components/daily";
 import { Hourly } from "./components/hourly";
 import { Realtime } from "./components/realtime";
+import Loader from "react-loader-spinner";
 
 export function Forecast() {
   const dispatch = useDispatch();
@@ -41,7 +42,13 @@ export function Forecast() {
       });
     }
     return (
-      <div>loading...</div>
+      <Loader
+        type="Puff"
+        color="#00BFFF"
+        height={100}
+        width={100}
+        timeout={3000} //3 secs
+      />
     );
   }
   else {
