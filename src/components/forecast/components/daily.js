@@ -25,7 +25,7 @@ export function Daily(props) {
                 {elem.day.mintemp_c}°C
               </NightTemp>
             </h3>
-            <img src={`http:${elem.day.condition.icon}`} alt="" />
+            <img src={`http:${elem.day.condition.icon}`} alt="weather condition" />
             <p>{elem.day.condition.text}</p>
           </GridItem>
         )}

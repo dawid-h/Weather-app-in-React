@@ -17,7 +17,7 @@ export function Hourly(props) {
           <GridItem key={x.time.substr(x.time.length - 5)}>
             <h2>{x.time.substr(x.time.length - 5)}</h2>
             <h3>{x.temp_c}°C</h3>
-            <img src={`http:${x.condition.icon}`} alt="" />
+            <img src={`http:${x.condition.icon}`} alt="weather condition" />
             <p>{x.condition.text}</p>
           </GridItem>
         )}

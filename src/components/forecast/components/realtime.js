@@ -43,7 +43,7 @@ export function Realtime(forecast) {
         <WeatherGIF condition={forecast.current.condition.text} />
       </SideInfo>
       <h2>{forecast.current.temp_c}°C</h2>
-      <img src={`http:${forecast.current.condition.icon}`} alt="current weather" />
+      <img src={`http:${forecast.current.condition.icon}`} alt="wether condition" />
       <p>{forecast.current.condition.text}</p>
     </div>
   );

@@ -44,7 +44,7 @@ export function SearchBar(yourLocation) {
 
   return (
     <div>
-      <p>Choose the location</p>
+      <p>Choose the location:</p>
       <Autocomplete
         value={state.value}
         items={state.items}
@@ -60,7 +60,7 @@ export function SearchBar(yourLocation) {
             setTimeout(() => fetchDataFromAPI(e.target.value), 500);
         }}
         renderItem={(item, isHighlighted) =>
-          <div key={item.id} style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
+          <div key={item.id} style={{background: isHighlighted ? 'lightgray' : 'white'}}>
             {item.name}
           </div>
         }
