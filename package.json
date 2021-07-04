@@ -1,4 +1,8 @@
 {
+  "author": {
+    "name": "Dawid Herman",
+    "email": "dh406158@students.mimuw.edu.pl"
+  },
   "name": "final",
   "version": "0.1.0",
   "private": true,
