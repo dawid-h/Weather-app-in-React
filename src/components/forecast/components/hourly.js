@@ -1,8 +1,12 @@
+import { WeatherOverview } from "./WeatherOverview";
 
 export function Hourly(props) {
   return (
     <div>
       <h1>{props.location.name}, {props.location.country}</h1>
+      <h4>
+        <WeatherOverview {...props.forecast.forecastday} />
+      </h4>
       {props.forecast.forecastday[0].hour.map(x =>
         <div key={x.time.substr(x.time.length - 5)}>
           <h2>{x.time.substr(x.time.length - 5)}</h2>

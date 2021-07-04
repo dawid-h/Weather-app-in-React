@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useWeatherAPI } from "../../../hooks/useWeatherAPI";
+import { WeatherOverview } from "./WeatherOverview";
 
 export function Realtime(forecast) {
   const FIFTEEN_MINUTES = 900000;
@@ -14,7 +15,8 @@ export function Realtime(forecast) {
         throw Error("No connection");
       return response.json();
     }).then(data => {
-      forecast = data;
+      forecast = {...forecast, ...data};
+      console.log(forecast);
       setError(false);
     }).catch(() => {
       setError(true);
@@ -35,6 +37,9 @@ export function Realtime(forecast) {
     <div>
       <p>{writeErrorIfOccurred()}</p>
       <h1>{forecast.location.name}, {forecast.location.country}</h1>
+      <h4>
+        <WeatherOverview {...forecast.forecast.forecastday} />
+      </h4>
       <h2>{forecast.current.temp_c}°C</h2>
       <img src={`http:${forecast.current.condition.icon}`} alt="current weather" />
       <p>{forecast.current.condition.text}</p>
