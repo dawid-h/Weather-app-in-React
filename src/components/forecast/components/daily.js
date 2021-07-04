@@ -1,8 +1,12 @@
+import { WeatherOverview } from "./WeatherOverview";
 
 export function Daily(props) {
   return (
     <div>
       <h1>{props.location.name}, {props.location.country}</h1>
+      <h4>
+        <WeatherOverview {...props.forecast.forecastday} />
+      </h4>
       <span>
         <h2>Dzisiaj</h2>
         <h3>
