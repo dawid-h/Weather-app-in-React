@@ -9,6 +9,7 @@ import "./style.css";
 import lightTheme from "./themes/light";
 import darkTheme from "./themes/dark";
 import Container from "./components/styles/Container";
+import ThemeSwitch from "./components/styles/ThemeSwitch"
 
 function App() {
   const [defaultLocation, setDefaultLocation] = useState({});
@@ -38,7 +39,9 @@ function App() {
   return (
     <ThemeProvider theme={isDarkModeOn ? darkTheme : lightTheme}>
       <Container>
-        <button onClick={() => dispatch(toggleTheme())}>Change your theme</button>
+        <ThemeSwitch onClick={() => dispatch(toggleTheme())}>
+          Change your theme
+        </ThemeSwitch>
         <SearchBar {...defaultLocation} />
         <PeriodSwitch />
         <Forecast />
