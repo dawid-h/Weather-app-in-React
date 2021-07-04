@@ -1,4 +1,6 @@
 import { WeatherOverview } from "./WeatherOverview";
+import GridContainer from "../../styles/GridContainer";
+import GridItem from "../../styles/GridItem";
 
 export function Hourly(props) {
   return (
@@ -7,14 +9,16 @@ export function Hourly(props) {
       <h4>
         <WeatherOverview {...props.forecast.forecastday} />
       </h4>
-      {props.forecast.forecastday[0].hour.map(x =>
-        <div key={x.time.substr(x.time.length - 5)}>
-          <h2>{x.time.substr(x.time.length - 5)}</h2>
-          <h3>{x.temp_c}°C</h3>
-          <img src={`http:${x.condition.icon}`} alt="" />
-          <p>{x.condition.text}</p>
-        </div>
-      )}
+      <GridContainer moreCols>
+        {props.forecast.forecastday[0].hour.map(x =>
+          <GridItem key={x.time.substr(x.time.length - 5)}>
+            <h2>{x.time.substr(x.time.length - 5)}</h2>
+            <h3>{x.temp_c}°C</h3>
+            <img src={`http:${x.condition.icon}`} alt="" />
+            <p>{x.condition.text}</p>
+          </GridItem>
+        )}
+      </GridContainer>
     </div>
   );
 }
