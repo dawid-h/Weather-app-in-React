@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useWeatherAPI } from "../../../hooks/useWeatherAPI";
+import { WeatherGIF } from "./WeatherGIF";
 import { WeatherOverview } from "./WeatherOverview";
 
 export function Realtime(forecast) {
@@ -40,6 +41,7 @@ export function Realtime(forecast) {
       <h4>
         <WeatherOverview {...forecast.forecast.forecastday} />
       </h4>
+      <WeatherGIF condition={forecast.current.condition.text} />
       <h2>{forecast.current.temp_c}°C</h2>
       <img src={`http:${forecast.current.condition.icon}`} alt="current weather" />
       <p>{forecast.current.condition.text}</p>
