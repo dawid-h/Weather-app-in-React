@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { data$ } from "../../../hooks/useGIFAPI";
 import { Loading } from "../../Loading";
 
 export function WeatherGIF(props) {
@@ -7,17 +8,14 @@ export function WeatherGIF(props) {
   const [gif, setGif] = useState(0);
 
   if (gifs === undefined)
-    return (<p>Nie można załodować obrazków.</p>);
+    return (<p>The pictures cannot be loaded.</p>);
 
   if (Object.keys(gifs).length === 0) {
-    fetch(`https://api.tenor.com/v1/search?q=${encodeURI(props.condition)}` +
-          `&media_filter=minimal&content_filter=high&locale=en_ZA&limit=50`
-    ).then(response => {
-      if (!response.ok)
-        throw Error("No connection");
-      return response.json();
-    }).then(data => setGifs(data)
-    ).catch(() => setGifs(undefined));
+
+    data$(encodeURI(props.condition)).subscribe({
+      next: data => setGifs(data),
+      error: err => {setGifs(undefined); console.log(err);}
+    })
 
     return (<Loading />);
   }
