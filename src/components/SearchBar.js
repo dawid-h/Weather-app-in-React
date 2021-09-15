@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import Autocomplete from 'react-autocomplete';
 import { useDispatch } from 'react-redux';
 import { setPlace } from '../actions';
-import { useWeatherAPI } from '../hooks/useWeatherAPI';
+import { matchingNames$ } from '../hooks/useLocationList';
 import { Loading } from './Loading';
 import DropDownList from './styles/DropDownList';
 
@@ -13,33 +13,27 @@ export function SearchBar(yourLocation) {
     items: [yourLocation],
     loading: false
   });
-  const key = useWeatherAPI();
   const typingTimerRef = useRef(null);
   const isSimilar = (original, compared) => {
     return original.toLowerCase().indexOf(compared.toLowerCase()) === 0;
   }
 
-  async function fetchDataFromAPI(value) {
+  function fetchDataFromAPI(value) {
     if (value === '') {
       setState({value, items: [yourLocation], loading: false});
       return;
     }
-    fetch(`http://api.weatherapi.com/v1/search.json?key=${key}&q=${encodeURI(value)}`)
-      .then(response => {
-        if (!response.ok)
-          throw Error("No connection");
-        return response.json();
-      })
-      .then(data => {
-        setState({
-          value, 
-          items: isSimilar(yourLocation.name, value) ? [yourLocation, ...data] : data, 
-          loading: false
-        });
-      })
-      .catch(() => {
+    matchingNames$(encodeURI(value)).subscribe({
+      next: data => setState({
+        value, 
+        items: isSimilar(yourLocation.name, value) ? [yourLocation, ...data] : data, 
+        loading: false
+      }),
+      error: err => {
         setState({value, items: [], loading: false});
-      });
+        console.log(err);
+      }
+    });
   }
 
   return (

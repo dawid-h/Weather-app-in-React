@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addCache } from "../../actions";
-import { useWeatherAPI } from "../../hooks/useWeatherAPI";
+import { weatherForecast$ } from "../../hooks/useWeatherAPI";
 import { Daily } from "./components/daily";
 import { Hourly } from "./components/hourly";
 import { Realtime } from "./components/realtime";
@@ -13,7 +13,6 @@ export function Forecast() {
   const place = useSelector(x => x.place);
   const forecast = useSelector(x => x.cache[place.lat + ',' + place.lon]);
   const [state, setState] = useState({});
-  const key = useWeatherAPI();
 
   useEffect(() => {
     setState({
@@ -24,23 +23,23 @@ export function Forecast() {
 
   if (state.loading) {
     if (place.lat !== undefined && place.lon !== undefined) {
-      fetch(`http://api.weatherapi.com/v1/forecast.json?` +
-            `key=${key}&q=${place.lat},${place.lon}&days=3`
-      ).then(response => {
-        if (!response.ok)
-          throw Error("No connection");
-        return response.json();
-      }).then(data => {
-        setState({loading: false, forecast: data});
-        dispatch(addCache(place, data));
-      }).catch(() => {
-        setState({loading: false, forecast: undefined});
+      weatherForecast$(place.lat, place.lon).subscribe({
+        next: data => {
+          setState({loading: false, forecast: data});
+          dispatch(addCache(place, data));
+        },
+        error: err => {
+          setState({loading: false, forecast: undefined});
+          console.log(err);
+        }
       });
     }
     return (<Loading />);
   }
   else {
     if (state.forecast !== undefined) {
+      // console.log(state.forecast);
+      // return ( <div>test</div> );
       switch (period) {
         case 'DAILY':
           if (state.forecast.forecast === undefined)
