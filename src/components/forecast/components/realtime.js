@@ -1,34 +1,22 @@
-import { useRef, useState } from "react";
-import { useWeatherAPI } from "../../../hooks/useWeatherAPI";
+import { useState } from "react";
+import { realtime$ } from "../../../hooks/useWeatherAPIRealtime";
 import SideInfo from "../../styles/SideInfo";
 import { WeatherGIF } from "./WeatherGIF";
 import { WeatherOverview } from "./WeatherOverview";
 
 export function Realtime(forecast) {
-  const FIFTEEN_MINUTES = 900000;
   const [error, setError] = useState(false);
-  const key = useWeatherAPI();
-  const refresh = useRef(null);
-  const fetchDataFromAPI = () => {
-    fetch(`http://api.weatherapi.com/v1/current.json?key=${key}&q=` +
-          `${forecast.location.lat},${forecast.location.lon}&days=3`
-    ).then(response => {
-      if (!response.ok)
-        throw Error("No connection");
-      return response.json();
-    }).then(data => {
+  
+  realtime$(forecast.location.lat, forecast.location.lon).subscribe({
+    next: data => {
       forecast = {...forecast, ...data};
       setError(false);
-    }).catch(() => {
+    },
+    error: err => {
       setError(true);
-    });
-  }
-
-  if (refresh.current === null)
-    fetchDataFromAPI();
-  
-  clearInterval(refresh.current);
-  refresh.current = setInterval(() => fetchDataFromAPI(), FIFTEEN_MINUTES);
+      console.log(err);
+    }
+  });
 
   function writeErrorIfOccurred() {
     return error ? 'Loading current data failed' : '';
