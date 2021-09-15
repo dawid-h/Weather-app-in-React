@@ -35,6 +35,17 @@ function App() {
     );
   }
 
+  if (navigator.geolocation)
+    navigator.geolocation.getCurrentPosition(pos => {
+      if (pos.coords.latitude !== defaultLocation.lat || pos.coords.longitude !== defaultLocation.lon)
+        setDefaultLocation({
+          name: 'Your location',
+          id: 0,
+          lat: pos.coords.latitude, 
+          lon: pos.coords.longitude
+        });
+    });
+
   dispatch(setPlace(defaultLocation));
   return (
     <ThemeProvider theme={isDarkModeOn ? darkTheme : lightTheme}>

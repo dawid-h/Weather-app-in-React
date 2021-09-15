@@ -38,8 +38,6 @@ export function Forecast() {
   }
   else {
     if (state.forecast !== undefined) {
-      // console.log(state.forecast);
-      // return ( <div>test</div> );
       switch (period) {
         case 'DAILY':
           if (state.forecast.forecast === undefined)
