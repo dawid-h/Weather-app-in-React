@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { data$ } from "../../../hooks/useGIFAPI";
 import { Loading } from "../../Loading";
 
@@ -6,6 +6,12 @@ export function WeatherGIF(props) {
   const gifSwitch = useRef(null);
   const [gifs, setGifs] = useState({});
   const [gif, setGif] = useState(0);
+
+  useEffect(() => {
+    return () => {
+      clearInterval(gifSwitch.current);
+    }
+  }, []);
 
   if (gifs === undefined)
     return (<p>The pictures cannot be loaded.</p>);
